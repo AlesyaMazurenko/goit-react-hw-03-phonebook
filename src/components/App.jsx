@@ -64,6 +64,30 @@ export class App extends Component {
     contact.name.toLowerCase().includes(normalizedFilter));
   }
 
+  // Стадия монтирования - вызывается 1 раз при загрузке
+  componentDidMount() {
+    console.log('App componentDidMount');
+
+    const contacts1 = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts1);
+
+    //записываем в State, не важно предыдущее состояние
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });    
+    }
+    
+  }
+
+  // Стадия обновления = вызывается кажлый раз
+  componentDidUpdate(prevProps, prevState) {
+    console.log('App Стадия обновления  componentDidUpdate');
+
+    // обязательно перед отновлением проверяем дыйствительно ли изменилось, иначе зациклится компонент!!!!
+    if (this.state.contacts !== prevState.contacts) {
+      console.log('Обновилось поле contacts');
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
   render() {
     const { formSubmitHandler, removeContact } = this;
     const { filter } = this.state;
